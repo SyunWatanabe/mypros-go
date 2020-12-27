@@ -1,0 +1,17 @@
+{
+  "name": "mypros-go",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "golang",
+  "workspaceFolder": "/go/src/app",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "go.gopath": "/go",
+    "go.inferGopath": true,
+    "go.useLanguageServer": true
+    },
+    "extensions": [
+        "golang.go",
+        "coenraads.bracket-pair-colorizer-2",
+        "formulahendry.auto-close-tag"
+    ]
+}

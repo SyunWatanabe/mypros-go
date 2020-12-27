@@ -1,0 +1,35 @@
+version: '3'
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: "Asia/Tokyo"
+    # オプションは日本語文の字化けに対するおまじない
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --skip-character-set-client-handshake
+    volumes:
+      - "./data:/var/lib/mysql"
+      # 初期設定を読み込む
+      - "./docker/mysql/my.conf:/etc/mysql/my.conf"
+      # MySQL起動時にDBを作成する(docker-entrypoint-initdb.d 配下の特定のfileは自動実行される)
+      - "./docker/mysql/init/:/docker-entrypoint-initdb.d"
+
+  golang:
+    container_name: mypros-go
+    build:
+      context: .
+      dockerfile: ./docker/golang/Dockerfile
+    tty: true
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/go/src/app
+    command: >
+      go run main.go &&
+      sleep infinity
