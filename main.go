@@ -1,25 +1,27 @@
 package main
 
-import(
-	"net/http"
-    "github.com/labstack/echo/v4"
-    _ "github.com/go-sql-driver/mysql"
-    _ "gorm.io/gorm"
-    _ "gorm.io/driver/mysql"
-    _ "github.com/valyala/fasthttp"
-    _ "go.uber.org/zap"
-    _ "github.com/joho/godotenv"
+import (
+	"log"
+	"mypros-go/utils"
+
+	"github.com/joho/godotenv"
+	"github.com/labstack/echo/v4"
 )
 
-type User struct {
-    Name string `json:"name"`
-}
-
 func main() {
-    e := echo.New()
-    u := new(User)
-	e.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, u)
-	})
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("No .env file found")
+	}
+
+	e := echo.New()
+
+	e.GET("/", utils.RootHandler)
+
+	e.GET("/login/github", utils.GithubLoginHandler)
+
+	e.GET("/login/github/callback", utils.GithubCallbackHandler)
+
+	e.GET("/mypage", utils.MypageHandler)
+    
 	e.Logger.Fatal(e.Start(":8000"))
 }
