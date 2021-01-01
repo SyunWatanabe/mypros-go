@@ -15,6 +15,9 @@ func main() {
 
 	e := echo.New()
 
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
 	e.GET("/", utils.RootHandler)
 
 	e.GET("/login/github", utils.GithubLoginHandler)
